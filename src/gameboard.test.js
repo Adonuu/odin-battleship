@@ -10,9 +10,9 @@ test('placeShip(length, row, col, direction) should place a ship at the followin
     const expectedBoard = Array.from({ length: 10 }, () => new Array(10).fill(0));
     const ship = new Ship(3);
 
-    expectedBoard[0][0] = ship;
-    expectedBoard[0][1] = ship;
-    expectedBoard[0][2] = ship;
+    expectedBoard[0][0] = {ship, hit: false};
+    expectedBoard[0][1] = {ship, hit: false};
+    expectedBoard[0][2] = {ship, hit: false};
 
     expect(gameboard.board).toEqual(expectedBoard);
     
@@ -27,11 +27,11 @@ test('placeShip(length, row, col, direction) should place a ship at the followin
     const expectedBoard = Array.from({ length: 10 }, () => new Array(10).fill(0));
     const ship = new Ship(5);
 
-    expectedBoard[5][5] = ship;
-    expectedBoard[6][5] = ship;
-    expectedBoard[7][5] = ship;
-    expectedBoard[8][5] = ship;
-    expectedBoard[9][5] = ship;
+    expectedBoard[5][5] = {ship, hit: false};
+    expectedBoard[6][5] = {ship, hit: false};
+    expectedBoard[7][5] = {ship, hit: false};
+    expectedBoard[8][5] = {ship, hit: false};
+    expectedBoard[9][5] = {ship, hit: false};
 
     expect(gameboard.board).toEqual(expectedBoard);
     
@@ -58,7 +58,7 @@ test('receiveAttack(row, col) should increment the hits on the ship when it is h
 
     gameboard.receiveAttack(0, 0);
 
-    expect(gameboard.board[0][0].hits).toBe(1);
+    expect(gameboard.board[0][0].ship.hits).toBe(1);
     
 });
 
@@ -100,3 +100,12 @@ test('allShipsSunk() should note when not all ships are sunk on the gameboard', 
     expect(gameboard.allShipsSunk()).toBe(false);
     
 });
+
+test('checkForShip() should see if a ship already exists at a location', () => {
+    const gameboard = new Gameboard();
+
+    gameboard.placeShip(3, 0, 0, 'right');
+
+    expect(gameboard.checkForShip(3, 0, 0, 'right')).toBe(true);
+
+})
