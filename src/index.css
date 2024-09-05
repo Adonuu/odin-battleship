@@ -2,9 +2,71 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
     text-align: center;
-    margin-top: 50px;
+    display: grid;
+    grid-template-areas: 
+    "header header"
+    "playerBoard computerBoard";
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    grid-template-rows: 1fr 4fr;
+    gap: 0;
 }
 
 h1 {
     color: #333;
+    grid-area: header;
+    background-color: lightgoldenrodyellow;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    font-size: 4rem;
+}
+
+#playerBoard {
+    grid-area: playerBoard;
+    width: 100%;
+    height: 100%;
+    background-color: blue;
+}
+
+#computerBoard {
+    grid-area: computerBoard;
+    width: 100%;
+    height: 100%;
+    background-color: orangered;
+}
+
+table {
+    margin: 5%;
+    width: 90%;
+    height: 82%;
+}
+
+h2 {
+    color: white;
+}
+
+td {
+    border: 1px solid black;
+    background: white;
+}
+
+._2 {
+    background-color: red;
+}
+
+._3 {
+    background-color: green;
+}
+
+._4 {
+    background-color: purple;
+}
+
+._5 {
+    background-color: orange;
 }

@@ -1,15 +1,21 @@
 import "./index.css";
 import Player from "./player";
+import { renderBoard } from "./domRenderer";
 
 // initialize two players
-let humanPlayer = new Player();
-let computerPlayer = new Player();
+let humanPlayer = new Player('real');
+let computerPlayer = new Player('computer');
 
 // generate two random boards for the players
 generateRandomBoard(humanPlayer);
 generateRandomBoard(computerPlayer);
 
-console.log(humanPlayer);
+// grab elements for rendering boards to
+const humanBoard = document.querySelector('#playerBoard');
+const computerBoard = document.querySelector('#computerBoard');
+
+humanBoard.appendChild(renderBoard(humanPlayer));
+computerBoard.appendChild(renderBoard(computerPlayer));
 
 
 function generateRandomBoard(player) {
