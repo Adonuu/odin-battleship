@@ -56,7 +56,7 @@ td {
 }
 
 ._2 {
-    background-color: red;
+    background-color: yellow;
 }
 
 ._3 {
@@ -68,5 +68,13 @@ td {
 }
 
 ._5 {
-    background-color: orange;
+    background-color: orangered;
+}
+
+.hit {
+    background-color: red;
+}
+
+.miss {
+    background-color: gray;
 }

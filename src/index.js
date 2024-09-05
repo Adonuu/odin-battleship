@@ -14,8 +14,46 @@ generateRandomBoard(computerPlayer);
 const humanBoard = document.querySelector('#playerBoard');
 const computerBoard = document.querySelector('#computerBoard');
 
+// render boards
 humanBoard.appendChild(renderBoard(humanPlayer));
 computerBoard.appendChild(renderBoard(computerPlayer));
+
+// add event listeners to each td for doing a receive attack
+document.querySelectorAll('#computerBoard table td').forEach(cell => {
+    cell.addEventListener('click', (e) => {
+        const clickedCell = e.target;
+        let row = clickedCell.parentElement.rowIndex;
+        let col = Array.from(clickedCell.parentElement.children).indexOf(clickedCell);
+
+        let result = computerPlayer.board.receiveAttack(row, col);
+
+        // if receiveAttack is true that means that square was a hit
+        if (result === true) {
+            clickedCell.classList.add('hit');
+        } else {
+            clickedCell.classList.add('miss');
+        }
+
+        // delay just to make it seem more natural
+        setTimeout(() => {
+            // have the computer make an attack on the player board
+            [row, col] = generateRandomAttack(humanPlayer);
+
+            // figure out which cell to apply the result to
+            let humanCell = document.querySelector('#playerBoard table').rows[row].cells[col];
+            
+            result = humanPlayer.board.receiveAttack(row, col);
+
+            // if receiveAttack is true that means that square was a hit
+            if (result === true) {
+                humanCell.classList.add('hit');
+            } else {
+                humanCell.classList.add('miss');
+            }
+        }, 1000);
+
+    });
+})
 
 
 function generateRandomBoard(player) {
@@ -104,5 +142,5 @@ function generateRandomAttack(player) {
         col = Math.floor(Math.random() * 10);
     }
 
-    player.board.receiveAttack(row, col);
+    return [row, col];
 }
