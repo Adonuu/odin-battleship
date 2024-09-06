@@ -1,6 +1,6 @@
 import "./index.css";
 import Player from "./player";
-import { renderBoard } from "./domRenderer";
+import { renderBoard, renderPieces } from "./domRenderer";
 
 // initialize two players
 let humanPlayer = new Player('real');
@@ -13,11 +13,15 @@ generateRandomBoard(computerPlayer);
 // grab elements for rendering boards to
 const humanBoard = document.querySelector('#playerBoard');
 const computerBoard = document.querySelector('#computerBoard');
-const newGameButton = document.querySelector('#newGame')
+const newGameButton = document.querySelector('#newGame');
+const piecesDiv = document.querySelector('#pieces');
 
 // render boards
 humanBoard.appendChild(renderBoard(humanPlayer));
 computerBoard.appendChild(renderBoard(computerPlayer));
+
+// render pieces
+piecesDiv.appendChild(renderPieces());
 
 // add event listeners to each td for doing a receive attack
 document.querySelectorAll('#computerBoard table td').forEach(cell => {

@@ -9,7 +9,7 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
-    grid-template-rows: 1fr 4fr;
+    grid-template-rows: 1fr 5fr;
     gap: 0;
 }
 
@@ -43,10 +43,36 @@ h1 {
     background-color: orangered;
 }
 
-table {
+#computerBoard table {
     margin: 5%;
     width: 90%;
     height: 82%;
+}
+
+#playerBoard table {
+    margin: 5%;
+    width: 90%;
+    height: 60%;
+}
+
+#pieces {
+    border: 1px solid white;
+    margin: 0px 20px;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+#Ships {
+    padding: 5px;
+    height: 10vh;
+    display: flex;
+    gap: 10px;
+    flex-flow: column wrap;
+}
+
+h3 {
+    color: white;
+    height: 10%;
 }
 
 h2 {

@@ -24,3 +24,25 @@ export function renderBoard(player) {
 
     return tableDiv;
 }
+
+export function renderPieces() {
+    const shipLengths = [5, 4, 3, 3, 2];
+
+    let baseDiv = document.createElement('div');
+    baseDiv.id = 'Ships';
+
+    // get width of td cell
+    const tdWidth = document.querySelector('td').clientWidth;
+    const tdHeight = document.querySelector('td').clientHeight;
+
+    shipLengths.forEach(length => {
+        let shipDiv = document.createElement('div');
+        shipDiv.style.width = `${length * tdWidth}px`;
+        shipDiv.style.height = `${tdHeight}px`;
+        console.log(shipDiv.style.width);
+        shipDiv.classList.add('_' + length);
+        baseDiv.appendChild(shipDiv);
+    });
+
+    return baseDiv;
+}
