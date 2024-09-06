@@ -13,17 +13,20 @@ body {
     gap: 0;
 }
 
-h1 {
-    color: #333;
-    grid-area: header;
-    background-color: lightgoldenrodyellow;
+#header {
     width: 100%;
     height: 100%;
-    margin: 0;
+    grid-area: header;
+    background-color: lightgoldenrodyellow;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: center;
-    font-size: 4rem;
+    margin: 0;
+    align-items: center;
+}
+
+h1 {
+    color: #333;
+    font-size: 2rem;
 }
 
 #playerBoard {
@@ -77,4 +80,12 @@ td {
 
 .miss {
     background-color: gray;
+}
+
+#header h2 {
+    color: black;
+}
+
+#newGame {
+    width: 10%;
 }

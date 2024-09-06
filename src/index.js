@@ -13,6 +13,7 @@ generateRandomBoard(computerPlayer);
 // grab elements for rendering boards to
 const humanBoard = document.querySelector('#playerBoard');
 const computerBoard = document.querySelector('#computerBoard');
+const newGameButton = document.querySelector('#newGame')
 
 // render boards
 humanBoard.appendChild(renderBoard(humanPlayer));
@@ -34,6 +35,10 @@ document.querySelectorAll('#computerBoard table td').forEach(cell => {
             clickedCell.classList.add('miss');
         }
 
+        if (computerPlayer.board.allShipsSunk()) {
+            declareWinner(humanPlayer);
+        }
+
         // delay just to make it seem more natural
         setTimeout(() => {
             // have the computer make an attack on the player board
@@ -50,10 +55,28 @@ document.querySelectorAll('#computerBoard table td').forEach(cell => {
             } else {
                 humanCell.classList.add('miss');
             }
+
+            if (humanPlayer.board.allShipsSunk()) {
+                declareWinner(computerPlayer);
+            }
         }, 1000);
 
     });
-})
+});
+
+newGameButton.addEventListener('click', () => resetGame());
+
+function declareWinner(player) {
+
+    const winnerDiv = document.querySelector('#header h2');
+
+    // if no player is passed in change the text to blank
+    if (player === null) {
+        winnerDiv.innerHTML = '';
+    } else {
+        winnerDiv.innerHTML = 'The winner is ' + player.type + '!';
+    }
+}
 
 
 function generateRandomBoard(player) {
@@ -69,11 +92,11 @@ function generateRandomBoard(player) {
         // generate random direction
         let directionNum = Math.floor(Math.random() * 4);
         let direction = '';
-        if (direction === 0) {
+        if (directionNum === 0) {
             direction = 'right';
-        } else if (direction === 1) {
+        } else if (directionNum === 1) {
             direction = 'left';
-        } else if (direction === 2) {
+        } else if (directionNum === 2) {
             direction = 'up';
         } else {
             direction = 'down';
@@ -97,18 +120,6 @@ function generateRandomBoard(player) {
 
         // if there is already a ship there keep on making random guesses until you get there
         while(player.board.checkForShip(length, row, col, direction)) {
-            // generate random direction
-            directionNum = Math.floor(Math.random() * 4);
-            direction = '';
-            if (direction === 0) {
-                direction = 'right';
-            } else if (direction === 1) {
-                direction = 'left';
-            } else if (direction === 2) {
-                direction = 'up';
-            } else {
-                direction = 'down';
-            }
 
             // generate random row/col
             row = Math.floor(Math.random() * 10);
@@ -143,4 +154,34 @@ function generateRandomAttack(player) {
     }
 
     return [row, col];
+}
+
+function resetGame() {
+
+    // clear the boards
+    clearBoard(humanPlayer);
+    clearBoard(computerPlayer);
+
+    console.log(humanPlayer.board.board);
+
+    // declare no more winner
+    declareWinner(null);
+
+    // generate new boards
+    generateRandomBoard(humanPlayer);
+    generateRandomBoard(computerPlayer);
+
+    //re-render boards
+    humanBoard.removeChild(humanBoard.lastChild);
+    computerBoard.removeChild(computerBoard.lastChild);
+    humanBoard.appendChild(renderBoard(humanPlayer));
+    computerBoard.appendChild(renderBoard(computerPlayer));
+}
+
+function clearBoard(player) {
+    player.board.board.forEach((row, rowIndex) => {
+        row.forEach((_, colIndex) => {
+            player.board.board[rowIndex][colIndex] = 0;
+        });
+    });
 }
