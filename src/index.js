@@ -15,6 +15,7 @@ const computerBoard = document.querySelector('#computerBoard');
 const newGameButton = document.querySelector('#newGame');
 const piecesDiv = document.querySelector('#pieces');
 const startGameButton = document.querySelector('#startGame');
+const resetPiecesButton = document.querySelector('#resetPieces');
 
 // render boards
 humanBoard.appendChild(renderBoard(humanPlayer));
@@ -89,6 +90,27 @@ startGameButton.addEventListener('click', () => {
 humanBoard.lastChild.addEventListener('dragover', (e) => {
     e.preventDefault();
 });
+
+// when reset pieces button is pressed only reset the users board and not the computers
+resetPiecesButton.addEventListener('click', () => {
+    // clear board
+    clearBoard(humanPlayer);
+
+    // re-render board
+    const newBoard = renderBoard(humanPlayer);
+    humanBoard.querySelector('table').innerHTML = newBoard.innerHTML;
+
+    // re-render pieces
+    piecesDiv.lastChild.remove();
+    piecesDiv.appendChild(renderPieces());
+
+    // prevent user from clicking on computer board until start game is pressed
+    computerBoard.lastChild.style.pointerEvents = 'none';
+
+    // prevent user from clicking start game until all pieces are on their board
+    startGameButton.disabled = true;
+
+})
 
 humanBoard.lastChild.addEventListener('drop', (e) => {
     e.preventDefault();
