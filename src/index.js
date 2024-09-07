@@ -6,8 +6,7 @@ import { renderBoard, renderPieces } from "./domRenderer";
 let humanPlayer = new Player('real');
 let computerPlayer = new Player('computer');
 
-// generate two random boards for the players
-generateRandomBoard(humanPlayer);
+// generate random board for computer player
 generateRandomBoard(computerPlayer);
 
 // grab elements for rendering boards to
@@ -22,6 +21,9 @@ computerBoard.appendChild(renderBoard(computerPlayer));
 
 // render pieces
 piecesDiv.appendChild(renderPieces());
+
+// prevent user from clicking on computer board until start game is pressed
+computerBoard.lastChild.style.pointerEvents = 'none';
 
 // add event listeners to each td for doing a receive attack
 document.querySelectorAll('#computerBoard table td').forEach(cell => {
@@ -81,6 +83,13 @@ humanBoard.lastChild.addEventListener('dragover', (e) => {
 
 humanBoard.lastChild.addEventListener('drop', (e) => {
     e.preventDefault();
+
+    // Get the drop target cell
+    const targetCell = e.target.closest('td');
+    console.log(targetCell);
+    // if targetCell is invalid then don't do anything
+    if (!targetCell) return;
+
     const shipId = e.dataTransfer.getData("id");
     const offsetX = parseInt(e.dataTransfer.getData("offsetX"), 10);
     const offsetY = parseInt(e.dataTransfer.getData("offsetY"), 10);
@@ -92,18 +101,25 @@ humanBoard.lastChild.addEventListener('drop', (e) => {
     let clickedArea = Math.floor(widthRatio * shipLength);
 
     // figure out which row/col the event is targetting in the board
-    // Get the drop target cell
-    const targetCell = e.target.closest('td');
-    if (!targetCell) return;
     const row = targetCell.parentElement.rowIndex;
     const col = Array.from(targetCell.parentElement.children).indexOf(targetCell);
-    
-    humanPlayer.board.placeShip(shipLength, row - clickedArea, col, 'right');
 
-    // re-render board
-    humanBoard.removeChild(humanBoard.lastChild);
-    humanBoard.appendChild(renderBoard(humanPlayer));
-})
+    // if there is not already a ship at the location place the ship
+    if (!humanPlayer.board.checkForShip(shipLength, row - clickedArea, col, 'right')) {
+
+        // place ship
+        humanPlayer.board.placeShip(shipLength, row - clickedArea, col, 'right');
+
+        // Re-render board without removing the element
+        const newBoard = renderBoard(humanPlayer);
+        humanBoard.querySelector('table').innerHTML = newBoard.innerHTML;
+
+        // remove ship from ship div
+        document.querySelector('#Ships').removeChild(document.querySelector('#Ships').querySelector('#' + shipId));
+    } else {
+        alert('Ship Already There! Place Ship at new location');
+    }   
+});
 
 newGameButton.addEventListener('click', () => resetGame());
 
@@ -118,7 +134,6 @@ function declareWinner(player) {
         winnerDiv.innerHTML = 'The winner is ' + player.type + '!';
     }
 }
-
 
 function generateRandomBoard(player) {
     // generate and place 5 ships randomly on the board
@@ -203,20 +218,21 @@ function resetGame() {
     clearBoard(humanPlayer);
     clearBoard(computerPlayer);
 
-    console.log(humanPlayer.board.board);
-
     // declare no more winner
     declareWinner(null);
 
-    // generate new boards
-    generateRandomBoard(humanPlayer);
+    // generate new board
     generateRandomBoard(computerPlayer);
 
     //re-render boards
-    humanBoard.removeChild(humanBoard.lastChild);
-    computerBoard.removeChild(computerBoard.lastChild);
-    humanBoard.appendChild(renderBoard(humanPlayer));
-    computerBoard.appendChild(renderBoard(computerPlayer));
+    const newBoard = renderBoard(humanPlayer);
+    humanBoard.querySelector('table').innerHTML = newBoard.innerHTML;
+    const newBoardComputer = renderBoard(computerPlayer);
+    computerBoard.querySelector('table').innerHTML = newBoardComputer.innerHTML;
+
+    // re-render pieces
+    piecesDiv.lastChild.remove();
+    piecesDiv.appendChild(renderPieces());
 }
 
 function clearBoard(player) {
