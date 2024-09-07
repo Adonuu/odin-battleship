@@ -14,6 +14,7 @@ const humanBoard = document.querySelector('#playerBoard');
 const computerBoard = document.querySelector('#computerBoard');
 const newGameButton = document.querySelector('#newGame');
 const piecesDiv = document.querySelector('#pieces');
+const startGameButton = document.querySelector('#startGame');
 
 // render boards
 humanBoard.appendChild(renderBoard(humanPlayer));
@@ -24,6 +25,9 @@ piecesDiv.appendChild(renderPieces());
 
 // prevent user from clicking on computer board until start game is pressed
 computerBoard.lastChild.style.pointerEvents = 'none';
+
+// prevent user from clicking start game until all pieces are on their board
+startGameButton.disabled = true;
 
 // add event listeners to each td for doing a receive attack
 document.querySelectorAll('#computerBoard table td').forEach(cell => {
@@ -76,6 +80,11 @@ document.querySelectorAll('#computerBoard table td').forEach(cell => {
     });
 });
 
+// when start game button is clicked allow user to click on computer board cells
+startGameButton.addEventListener('click', () => {
+    computerBoard.lastChild.style.pointerEvents = 'auto';
+})
+
 // add event listeners for dragging/dropping on human board
 humanBoard.lastChild.addEventListener('dragover', (e) => {
     e.preventDefault();
@@ -116,6 +125,11 @@ humanBoard.lastChild.addEventListener('drop', (e) => {
 
         // remove ship from ship div
         document.querySelector('#Ships').removeChild(document.querySelector('#Ships').querySelector('#' + shipId));
+
+        // if there are no more ships in the div that means the game is ready to start
+        if (document.querySelector('#Ships').childNodes.length === 0) {
+            startGameButton.disabled = false;
+        }
     } else {
         alert('Ship Already There! Place Ship at new location');
     }   
@@ -233,6 +247,12 @@ function resetGame() {
     // re-render pieces
     piecesDiv.lastChild.remove();
     piecesDiv.appendChild(renderPieces());
+
+    // prevent user from clicking on computer board until start game is pressed
+    computerBoard.lastChild.style.pointerEvents = 'none';
+
+    // prevent user from clicking start game until all pieces are on their board
+    startGameButton.disabled = true;
 }
 
 function clearBoard(player) {

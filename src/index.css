@@ -117,7 +117,7 @@ td {
     color: black;
 }
 
-#newGame {
-    width: 10%;
+#buttons {
     margin-bottom: 10px;
+    flex-flow: row nowrap;
 }
