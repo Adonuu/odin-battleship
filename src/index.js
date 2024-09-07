@@ -43,6 +43,9 @@ document.querySelectorAll('#computerBoard table td').forEach(cell => {
             declareWinner(humanPlayer);
         }
 
+        // remove ability to click on computer board until computer has done it's attack
+        clickedCell.parentElement.style.pointerEvents = 'none';
+
         // delay just to make it seem more natural
         setTimeout(() => {
             // have the computer make an attack on the player board
@@ -63,10 +66,44 @@ document.querySelectorAll('#computerBoard table td').forEach(cell => {
             if (humanPlayer.board.allShipsSunk()) {
                 declareWinner(computerPlayer);
             }
+
+            // give player the ability to click since the computer has attacked
+            clickedCell.parentElement.style.pointerEvents = 'auto';
         }, 1000);
 
     });
 });
+
+// add event listeners for dragging/dropping on human board
+humanBoard.lastChild.addEventListener('dragover', (e) => {
+    e.preventDefault();
+});
+
+humanBoard.lastChild.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const shipId = e.dataTransfer.getData("id");
+    const offsetX = parseInt(e.dataTransfer.getData("offsetX"), 10);
+    const offsetY = parseInt(e.dataTransfer.getData("offsetY"), 10);
+    const shipWidth = parseInt(e.dataTransfer.getData('shipWidth'), 10);
+    const shipLength = parseInt(e.dataTransfer.getData('shipLength'), 10);
+
+    // figure out which cell on the ship the user clicked
+    let widthRatio = offsetX / shipWidth;
+    let clickedArea = Math.floor(widthRatio * shipLength);
+
+    // figure out which row/col the event is targetting in the board
+    // Get the drop target cell
+    const targetCell = e.target.closest('td');
+    if (!targetCell) return;
+    const row = targetCell.parentElement.rowIndex;
+    const col = Array.from(targetCell.parentElement.children).indexOf(targetCell);
+    
+    humanPlayer.board.placeShip(shipLength, row - clickedArea, col, 'right');
+
+    // re-render board
+    humanBoard.removeChild(humanBoard.lastChild);
+    humanBoard.appendChild(renderBoard(humanPlayer));
+})
 
 newGameButton.addEventListener('click', () => resetGame());
 

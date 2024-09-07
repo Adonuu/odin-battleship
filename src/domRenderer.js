@@ -35,12 +35,27 @@ export function renderPieces() {
     const tdWidth = document.querySelector('td').clientWidth;
     const tdHeight = document.querySelector('td').clientHeight;
 
-    shipLengths.forEach(length => {
+    shipLengths.forEach((length, index) => {
         let shipDiv = document.createElement('div');
         shipDiv.style.width = `${length * tdWidth}px`;
         shipDiv.style.height = `${tdHeight}px`;
-        console.log(shipDiv.style.width);
+        shipDiv.id = 'Ship' + index;
+        shipDiv.draggable = true;
         shipDiv.classList.add('_' + length);
+        shipDiv.addEventListener('dragstart',(e) => {
+            const rect = e.target.getBoundingClientRect();
+            const offsetX = e.clientX - rect.left;
+            const offsetY = e.clientY - rect.top;
+            const shipWidth = e.target.style.width;
+            const shipLength = length;
+
+            // Add the offset data to the drag event
+            e.dataTransfer.setData("id", e.target.id);
+            e.dataTransfer.setData("offsetX", offsetX);
+            e.dataTransfer.setData("offsetY", offsetY);
+            e.dataTransfer.setData('shipWidth', shipWidth);
+            e.dataTransfer.setData('shipLength', shipLength);
+        });
         baseDiv.appendChild(shipDiv);
     });
 
