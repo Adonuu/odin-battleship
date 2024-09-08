@@ -80,6 +80,8 @@ document.querySelectorAll('#computerBoard table td').forEach(cell => {
             declareWinner(humanPlayer);
         }
 
+        document.querySelector('#computerBoard table').classList.toggle('flashing-border');
+
         if (result !== true) {
             // remove ability to click on computer board until computer has done its attack
             clickedCell.parentElement.style.pointerEvents = 'none';
@@ -93,6 +95,8 @@ document.querySelectorAll('#computerBoard table td').forEach(cell => {
                 }
             }
 
+            document.querySelector('#computerBoard table').classList.toggle('flashing-border');
+
             // Give player the ability to click again
             clickedCell.parentElement.style.pointerEvents = 'auto';
         }
@@ -101,8 +105,9 @@ document.querySelectorAll('#computerBoard table td').forEach(cell => {
 
 // when start game button is clicked allow user to click on computer board cells
 startGameButton.addEventListener('click', () => {
-    console.log('Game started');
     computerBoard.lastChild.style.pointerEvents = 'auto';
+    startGameButton.classList.toggle('flashing-border');
+    document.querySelector('#computerBoard table').classList.toggle('flashing-border');
 })
 
 // add event listeners for dragging/dropping on human board
@@ -194,6 +199,7 @@ humanBoard.lastChild.addEventListener('drop', (e) => {
             startGameButton.disabled = false;
             piecesDiv.style.display = 'none';
             document.querySelector('#playerBoard table').style.height = '82%';
+            startGameButton.classList.toggle('flashing-border');
         }
     } else {
         alert('Ship Already There! Place Ship at new location');
