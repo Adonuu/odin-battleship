@@ -47,17 +47,50 @@ export function renderPieces() {
             const offsetX = e.clientX - rect.left;
             const offsetY = e.clientY - rect.top;
             const shipWidth = e.target.style.width;
+            const shipHeight = e.target.style.height;
             const shipLength = length;
 
             // Add the offset data to the drag event
-            e.dataTransfer.setData("id", e.target.id);
-            e.dataTransfer.setData("offsetX", offsetX);
-            e.dataTransfer.setData("offsetY", offsetY);
+            e.dataTransfer.setData('id', e.target.id);
+            e.dataTransfer.setData('offsetX', offsetX);
+            e.dataTransfer.setData('offsetY', offsetY);
             e.dataTransfer.setData('shipWidth', shipWidth);
+            e.dataTransfer.setData('shipHeight', shipHeight);
             e.dataTransfer.setData('shipLength', shipLength);
         });
         baseDiv.appendChild(shipDiv);
     });
 
     return baseDiv;
+}
+
+export function rotateShips() {
+    const shipDiv = document.querySelector('#Ships');
+
+
+    // get width of td cell
+    const tdWidth = document.querySelector('td').clientWidth;
+    const tdHeight = document.querySelector('td').clientHeight;
+
+    let orientation = '';
+
+    Array.from(shipDiv.children).forEach(ship => {
+        // get length from classlist
+        let className = ship.classList.item(0);
+        let length = parseInt(className.slice(1), 10);
+        // if ship width doesn't equal one cell's width that means we are currently in horizontal display
+        if (ship.clientWidth != tdWidth) {
+            ship.style.width = `${tdWidth}px`;
+            ship.style.height = `${length * tdHeight}px`;
+            shipDiv.style.flexFlow = 'row wrap';
+            orientation = 'down';
+        } else {
+            ship.style.width = `${length * tdWidth}px`;
+            ship.style.height = `${tdHeight}px`;
+            shipDiv.style.flexFlow = 'column wrap';
+            orientation = 'right';
+        }
+    });
+
+    return orientation;
 }
