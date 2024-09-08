@@ -217,9 +217,11 @@ document.addEventListener('keydown', function(event) {
 });
 
 function declareWinner(player) {
-
-    alert('The winner is ' + player.type + '!');
-
+    if (player.type === 'real') {
+        alert('🎉 The winner is you! 😄');
+    } else {
+        alert('🤖 The winner is the computer 😢');
+    }
 }
 
 function generateRandomBoard(player) {
