@@ -80,11 +80,12 @@ document.querySelectorAll('#computerBoard table td').forEach(cell => {
             declareWinner(humanPlayer);
         }
 
-        document.querySelector('#computerBoard table').classList.toggle('flashing-border');
 
         if (result !== true) {
             // remove ability to click on computer board until computer has done its attack
             clickedCell.parentElement.style.pointerEvents = 'none';
+
+            document.querySelector('#computerBoard table').classList.toggle('flashing-border');
 
             // Perform computer attacks until it gets a miss
             let playerHit = false;
@@ -108,6 +109,7 @@ startGameButton.addEventListener('click', () => {
     computerBoard.lastChild.style.pointerEvents = 'auto';
     startGameButton.classList.toggle('flashing-border');
     document.querySelector('#computerBoard table').classList.toggle('flashing-border');
+    resetPiecesButton.disabled = true;
 })
 
 // add event listeners for dragging/dropping on human board
@@ -316,18 +318,25 @@ function resetGame() {
     const newBoardComputer = renderBoard(computerPlayer);
     computerBoard.querySelector('table').innerHTML = newBoardComputer.innerHTML;
 
-    // re-render pieces
-    piecesDiv.lastChild.remove();
-    piecesDiv.appendChild(renderPieces());
     piecesDiv.style.display = 'block';
 
     document.querySelector('#playerBoard table').style.height = '50%';
+
+    if (startGameButton.classList.contains('flashing-border')) {
+        startGameButton.classList.toggle('flashing-border');
+    }
+
+    // re-render pieces
+    piecesDiv.lastChild.remove();
+    piecesDiv.appendChild(renderPieces());
 
     // prevent user from clicking on computer board until start game is pressed
     computerBoard.lastChild.style.pointerEvents = 'none';
 
     // prevent user from clicking start game until all pieces are on their board
     startGameButton.disabled = true;
+
+    resetPiecesButton.disabled = false;
 }
 
 function clearBoard(player) {
